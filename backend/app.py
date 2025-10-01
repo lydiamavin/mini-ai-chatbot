@@ -5,8 +5,20 @@ import json
 import os
 from fuzzywuzzy import fuzz, process
 from transformers import pipeline
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
+
 
 app = FastAPI()
+
+# Serve frontend build
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+async def serve_frontend():
+    return FileResponse("static/index.html")
+
 
 app.add_middleware(
     CORSMiddleware,
