@@ -58,31 +58,18 @@ curl -X POST http://localhost:8000/ask -H "Content-Type: application/json" -d '{
 ```
 mini-ai-chatbot/
 ├── backend/
-│   ├── app.py                 # FastAPI app with LLM
-│   ├── knowledge_base.json    # 20 Q&A pairs
-│   ├── history.json           # Chat history
-│   ├── requirements.txt       # Python deps
+│   ├── app.py                
+│   ├── knowledge_base.json   
+│   ├── history.json           
+│   ├── requirements.txt   
 │   └── Dockerfile             # Container config
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx            # React chat component
-│   │   ├── App.css            # Dark chat styles
+│   │   ├── App.jsx          
+│   │   ├── App.css           
 │   │   └── main.jsx           # App entry
-│   ├── package.json           # Node deps
-│   └── vite.config.js         # Vite config
-├── .gitignore                 # Git ignores
+│   ├── package.json          
+│   └── vite.config.js         
+├── .gitignore                 
 └── README.md
 ```
-
-## Notes
-- Edit `backend/knowledge_base.json` to expand Q&A.
-- LLM loads on first unmatched question (may take time).
-- Tested with Docker; local setup may have NumPy issues on macOS.
-
-## Troubleshooting
-- **Backend fails**: Check Docker or venv activation.
-- **Frontend issues**: `npm cache clean --force` and reinstall.
-- **LLM not working**: Ensure internet for model download; falls back to message.
-- **Ports in use**: Change ports or stop conflicting services.
-
-For issues, check logs or GitHub issues.
