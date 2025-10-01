@@ -3,8 +3,8 @@ title: Mini AI Chatbot
 emoji: 🤖
 colorFrom: blue
 colorTo: green
-sdk: python
-sdk_version: "0.0.1"
+sdk: docker
+python_version: "3.10"
 app_file: app.py
 pinned: false
 ---
