@@ -1,90 +1,88 @@
 # Mini AI Chatbot
 
-A simple web-based AI chatbot that answers professional questions using a small knowledge base.
+A web-based AI chatbot answering professional questions using a knowledge base, with fuzzy matching and LLM fallback.
 
 ## Features
-- **Frontend (React)**: Clean UI with input box, submit button, answer display, and chat history (last 10 Q&As).
-- **Backend (FastAPI)**: REST API with `/ask` endpoint accepting JSON `{"question": "..."}` and returning `{"answer": "..."}`.
-- **Knowledge Base**: 10 professional Q&A pairs stored in JSON.
-- **Matching**: Fuzzy string matching using Python's `difflib`.
-- **History**: Saves Q&A history to `history.json`.
-- **Fallback**: Returns a default message for unmatched questions (placeholder for LLM API).
+- **Frontend (React + Vite)**: Conversational chat UI with history and clear option.
+- **Backend (FastAPI)**: REST API with `/ask` endpoint.
+- **Knowledge Base**: 20 professional Q&A pairs in JSON.
+- **Matching**: Fuzzy string matching using `fuzzywuzzy` (70% threshold).
+- **History**: Persists chat history in `history.json`.
+- **Fallback**: Open-source LLM (DistilGPT-2) for unmatched questions.
+- **Deployment**: Docker support for easy containerization.
 
 ## Quick Start
 
 ### Prerequisites
-- Python 3.8+ (with pip)
-- Node.js 14+ (with npm)
+- Docker (for containerized run) or Python 3.8+ & Node.js 14+
 
-### 1. Clone or Download the Project
-Ensure you're in the project root directory.
-
-### 2. Backend Setup
+### Option 1: Docker (Recommended)
 ```bash
+cd backend
+docker build -t mini-ai-backend .
+docker run -d -p 8000:8000 --name mini-ai-backend mini-ai-backend
+cd ../frontend
+npm install
+npm run dev
+```
+Frontend: `http://localhost:5173`, Backend: `http://localhost:8000`.
+
+### Option 2: Local Setup
+```bash
+# Backend
 cd backend
 pip install -r requirements.txt
 uvicorn app:app --reload --host 0.0.0.0 --port 8000
-```
-Backend will run on `http://localhost:8000`.
 
-### 3. Frontend Setup (in a new terminal)
-```bash
+# Frontend (new terminal)
 cd frontend
 npm install
-npm run dev  # or npm start if using react-scripts
+npm run dev
 ```
-Frontend will run on `http://localhost:5173` (Vite) or `http://localhost:3000` (react-scripts).
-
-### 4. Test the Chatbot
-- Open the frontend URL in your browser.
-- Ask questions like "How can I improve my productivity?" or "What is work-life balance?"
-- Check chat history and backend logs for saved history.
 
 ## API Usage
 - **Endpoint**: `POST /ask`
-- **Request**: `{"question": "Your question here"}`
-- **Response**: `{"answer": "Matched or fallback answer"}`
+- **Request**: `{"question": "Your question"}`
+- **Response**: `{"answer": "Answer text"}`
 
-Example with curl:
+Example:
 ```bash
 curl -X POST http://localhost:8000/ask -H "Content-Type: application/json" -d '{"question": "How to manage time effectively?"}'
 ```
 
 ## Libraries Used
-- **Backend**: FastAPI (API framework), Uvicorn (server), Pydantic (data validation)
-- **Frontend**: React (UI), Axios (HTTP client), Vite or react-scripts (build tool)
-
-## Assumptions & Notes
-- Knowledge base is static; edit `backend/knowledge_base.json` to add more Q&As.
-- History persists in `backend/history.json` (appends on each ask).
-- No authentication or rate limiting.
-- CORS enabled for local dev.
-- Fallback is mock; integrate OpenAI API by adding `openai` to requirements and updating `app.py`.
-- Tested on macOS; adjust paths if needed.
+- **Backend**: FastAPI, Uvicorn, Pydantic, fuzzywuzzy, transformers, torch
+- **Frontend**: React, Axios, Vite
 
 ## Project Structure
 ```
 mini-ai-chatbot/
 ├── backend/
-│   ├── app.py                 # FastAPI app
-│   ├── knowledge_base.json    # Q&A data
+│   ├── app.py                 # FastAPI app with LLM
+│   ├── knowledge_base.json    # 20 Q&A pairs
 │   ├── history.json           # Chat history
-│   └── requirements.txt       # Python deps
+│   ├── requirements.txt       # Python deps
+│   └── Dockerfile             # Container config
 ├── frontend/
 │   ├── src/
-│   │   ├── App.js             # Main React component
-│   │   ├── App.css            # Styles
-│   │   └── index.js           # App entry
-│   ├── public/index.html      # HTML template
-│   └── package.json           # Node deps
-├── .gitignore                 # Ignore venv, node_modules, etc.
-└── README.md                  # This file
+│   │   ├── App.jsx            # React chat component
+│   │   ├── App.css            # Dark chat styles
+│   │   └── main.jsx           # App entry
+│   ├── package.json           # Node deps
+│   └── vite.config.js         # Vite config
+├── .gitignore                 # Git ignores
+└── README.md
 ```
 
-## Troubleshooting
-- **Backend errors**: Ensure Python venv is activated and deps installed.
-- **Frontend errors**: Clear npm cache (`npm cache clean --force`) and reinstall.
-- **Connection issues**: Check ports (8000 for backend, 5173/3000 for frontend) and firewall.
-- **No matches**: Questions must closely match knowledge base keys (case-insensitive fuzzy match).
+## Notes
+- Edit `backend/knowledge_base.json` to expand Q&A.
+- LLM loads on first unmatched question (may take time).
+- Tested with Docker; local setup may have NumPy issues on macOS.
 
-For issues, check console logs or open an issue on GitHub.
+## Troubleshooting
+- **Backend fails**: Check Docker or venv activation.
+- **Frontend issues**: `npm cache clean --force` and reinstall.
+- **LLM not working**: Ensure internet for model download; falls back to message.
+- **Ports in use**: Change ports or stop conflicting services.
+
+For issues, check logs or GitHub issues.

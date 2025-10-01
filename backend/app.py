@@ -37,27 +37,23 @@ def save_history(history):
         json.dump(history, f)
 
 kb = load_kb()
-# Load LLM for fallback (lazy load)
 generator = None
 
 @app.post("/ask")
 def ask(q: Question):
     question = q.question
-    # Load history for context
     history = load_history()
-    context = "\n".join([f"Q: {h['question']}\nA: {h['answer']}" for h in history[-3:]])  # Last 3
+    context = "\n".join([f"Q: {h['question']}\nA: {h['answer']}" for h in history[-3:]])
 
-    # Use fuzzywuzzy for better matching
     best_match, score = process.extractOne(question, kb.keys(), scorer=fuzz.ratio)
-    if score > 70:  # Threshold for match
+    if score > 70:
         answer = kb[best_match]
     else:
-        # Fallback with LLM, include context
         global generator
         if generator is None:
             try:
                 generator = pipeline('text-generation', model='distilgpt2')
-            except Exception as e:
+            except Exception:
                 generator = None
                 answer = "I'm sorry, I don't have information on that. Please consult a professional."
                 return
@@ -65,12 +61,11 @@ def ask(q: Question):
         try:
             response = generator(prompt, max_length=150, num_return_sequences=1, truncation=True, do_sample=True, temperature=0.7)
             generated = response[0]['generated_text']
-            # Use the full generated text as answer
             answer = generated.replace(prompt, "").strip()
             if not answer:
                 answer = generated
-        except Exception as e:
-            answer = f"LLM error: {str(e)}. Please consult a professional."
+        except Exception:
+            answer = "I'm sorry, I don't have information on that. Please consult a professional."
     
     # Save to history
     history.append({"question": q.question, "answer": answer})
