@@ -1,3 +1,14 @@
+---
+title: Mini AI Chatbot
+emoji: 🤖
+colorFrom: blue
+colorTo: green
+sdk: python
+sdk_version: "0.0.1"
+app_file: app.py
+pinned: false
+---
+
 # Mini AI Chatbot
 
 A web-based AI chatbot answering professional questions using a knowledge base, with fuzzy matching and LLM fallback.
