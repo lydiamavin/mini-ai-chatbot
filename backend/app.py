@@ -1,0 +1,79 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import json
+import os
+from fuzzywuzzy import fuzz, process
+from transformers import pipeline
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For demo, allow all
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class Question(BaseModel):
+    question: str
+
+KB_FILE = "knowledge_base.json"
+HISTORY_FILE = "history.json"
+
+def load_kb():
+    with open(KB_FILE) as f:
+        return json.load(f)
+
+def load_history():
+    if os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE) as f:
+            return json.load(f)
+    return []
+
+def save_history(history):
+    with open(HISTORY_FILE, 'w') as f:
+        json.dump(history, f)
+
+kb = load_kb()
+# Load LLM for fallback (lazy load)
+generator = None
+
+@app.post("/ask")
+def ask(q: Question):
+    question = q.question
+    # Load history for context
+    history = load_history()
+    context = "\n".join([f"Q: {h['question']}\nA: {h['answer']}" for h in history[-3:]])  # Last 3
+
+    # Use fuzzywuzzy for better matching
+    best_match, score = process.extractOne(question, kb.keys(), scorer=fuzz.ratio)
+    if score > 70:  # Threshold for match
+        answer = kb[best_match]
+    else:
+        # Fallback with LLM, include context
+        global generator
+        if generator is None:
+            try:
+                generator = pipeline('text-generation', model='distilgpt2')
+            except Exception as e:
+                generator = None
+                answer = "I'm sorry, I don't have information on that. Please consult a professional."
+                return
+        prompt = f"Answer professionally: {question}"
+        try:
+            response = generator(prompt, max_length=150, num_return_sequences=1, truncation=True, do_sample=True, temperature=0.7)
+            generated = response[0]['generated_text']
+            # Use the full generated text as answer
+            answer = generated.replace(prompt, "").strip()
+            if not answer:
+                answer = generated
+        except Exception as e:
+            answer = f"LLM error: {str(e)}. Please consult a professional."
+    
+    # Save to history
+    history.append({"question": q.question, "answer": answer})
+    save_history(history)
+    
+    return {"answer": answer}
