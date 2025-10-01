@@ -11,7 +11,7 @@ function App() {
     e.preventDefault();
     if (!question.trim()) return;
     try {
-      const res = await axios.post('http://localhost:8000/ask', { question });
+      const res = await axios.post('/ask', { question });
       const newAnswer = res.data.answer;
       setAnswer(newAnswer);
       setHistory(prev => [...prev.slice(-9), { q: question, a: newAnswer }]);
