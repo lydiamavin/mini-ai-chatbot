@@ -9,6 +9,8 @@ RUN npm run build
 # ---- Backend ----
 FROM python:3.10-slim
 WORKDIR /app
+
+# Install backend dependencies
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -18,7 +20,7 @@ COPY backend/ .
 # Copy built frontend into backend static folder
 COPY --from=frontend /app/frontend/dist ./static
 
-# Expose port for Hugging Face
+# Expose port for Hugging Face Spaces
 EXPOSE 7860
 
 # Start FastAPI with Uvicorn
