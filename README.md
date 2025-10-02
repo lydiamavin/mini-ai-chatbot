@@ -3,7 +3,7 @@
 A web-based AI chatbot that answers professional questions using a knowledge base with fuzzy string matching. Built with React frontend and FastAPI backend.
 
 ## Features
-- **Frontend (React + Vite)**: Clean conversational UI with input field, send button, answer display, and chat history (last 9 interactions).
+- **Frontend (React + Vite)**: Clean conversational UI with input field, send button, answer display, and chat history.
 - **Backend (FastAPI)**: REST API with `/ask` endpoint for question processing.
 - **Knowledge Base**: 56 professional Q&A pairs covering productivity, leadership, finance, marketing, HR, and more.
 - **Matching**: Fuzzy string matching using `fuzzywuzzy` library with 50% similarity threshold.
