@@ -46,6 +46,8 @@ curl -X POST http://localhost:8000/ask \
 ```
 Response: `{"answer": "Set SMART goals, use calendars, and avoid multitasking."}`
 
+<img width="503" height="643" alt="Screenshot 2025-10-02 at 6 02 28 PM" src="https://github.com/user-attachments/assets/746b6358-a0e3-4587-9027-dc751bff89c1" />
+
 ## Libraries Used
 - **Backend**: FastAPI, Uvicorn, Pydantic, fuzzywuzzy
 - **Frontend**: React, Axios, Vite
@@ -54,17 +56,17 @@ Response: `{"answer": "Set SMART goals, use calendars, and avoid multitasking."}
 ```
 mini-ai-chatbot/
 ├── backend/
-│   ├── app.py                 # FastAPI application
-│   ├── knowledge_base.json    # 56 Q&A pairs
-│   ├── history.json           # Chat history
-│   └── requirements.txt       # Python dependencies
+│   ├── app.py                 
+│   ├── knowledge_base.json    # ~50 Q&A pairs
+│   ├── history.json           
+│   └── requirements.txt       
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx            # Main React component
-│   │   ├── App.css            # Styles
-│   │   └── main.jsx           # App entry point
-│   ├── package.json           # Node dependencies
-│   └── vite.config.js         # Vite configuration
+│   │   ├── App.jsx            
+│   │   ├── App.css            
+│   │   └── main.jsx           
+│   ├── package.json          
+│   └── vite.config.js         
 ├── .gitignore
 └── README.md
 ```
