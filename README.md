@@ -73,5 +73,7 @@ mini-ai-chatbot/
 
 ## Assumptions
 - Knowledge base covers common professional topics; unmatched questions receive a fallback response.
-- Chat history uses the last 3 interactions for context.
 - Fuzzy matching threshold of 50% balances accuracy and coverage.
+
+
+https://github.com/user-attachments/assets/be374796-e30d-405d-a660-beb304230698
