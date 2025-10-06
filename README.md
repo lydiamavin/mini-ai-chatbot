@@ -12,7 +12,7 @@ pinned: false
 # Mini AI Chatbot
 
 A web-based AI chatbot that answers professional questions using a knowledge base with fuzzy string matching. Built with React frontend and FastAPI backend.
-Hf Spaces Deployed Link: https://huggingface.co/spaces/lydiaavin/mini-ai-chatbot 
+- Hf Spaces Deployed Link: https://huggingface.co/spaces/lydiaavin/mini-ai-chatbot 
 
 ## Features
 - **Frontend (React + Vite)**: Clean conversational UI with input field, send button, answer display, and chat history.
