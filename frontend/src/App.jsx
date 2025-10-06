@@ -9,7 +9,7 @@ function App() {
     if (!question.trim()) return
 
     try {
-      const response = await axios.post('http://localhost:8000/ask', { question })
+      const response = await axios.post('/ask', { question })
       const newEntry = { question, answer: response.data.answer }
       setHistory(prev => [...prev, newEntry].slice(-9)) // Keep last 9, oldest first
       setQuestion('')

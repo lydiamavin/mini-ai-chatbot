@@ -2,5 +2,3 @@ fastapi==0.104.1
 uvicorn[standard]==0.24.0
 fuzzywuzzy==0.18.0
 python-levenshtein==0.25.1
-transformers==4.40.0
-torch==2.2.0

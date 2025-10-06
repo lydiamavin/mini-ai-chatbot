@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from fuzzywuzzy import fuzz, process
-from transformers import pipeline
 import json
 import os
 
@@ -16,6 +17,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # -----------------------
 # Models & Files
@@ -43,15 +47,11 @@ def save_history(history):
 # Load KB into memory
 kb = load_kb()
 
-# Lazy init for LLM
-generator = None
-
 # -----------------------
 # API Endpoint
 # -----------------------
 @app.post("/ask")
 def ask(q: Question):
-    global generator
     question = q.question.strip()
 
     # Load chat history (last 3 interactions for context)
@@ -78,3 +78,11 @@ def ask(q: Question):
     save_history(history)
 
     return {"answer": answer}
+
+@app.get("/")
+async def read_index():
+    return FileResponse('static/index.html')
+
+@app.get("/{path:path}")
+async def serve_spa(path: str):
+    return FileResponse('static/index.html')
