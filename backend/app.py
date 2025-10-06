@@ -28,7 +28,7 @@ class Question(BaseModel):
     question: str
 
 KB_FILE = "knowledge_base.json"
-HISTORY_FILE = "history.json"
+HISTORY_FILE = "/tmp/history.json"
 
 def load_kb():
     with open(KB_FILE) as f:
