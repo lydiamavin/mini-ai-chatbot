@@ -1,3 +1,14 @@
+---
+title: Mini AI Chatbot
+emoji: 🤖
+colorFrom: blue
+colorTo: green
+sdk: docker
+sdk_version: latest
+app_file: Dockerfile
+pinned: false
+---
+
 # Mini AI Chatbot
 
 A web-based AI chatbot that answers professional questions using a knowledge base with fuzzy string matching. Built with React frontend and FastAPI backend.
